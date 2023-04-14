@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import psycopg2
 
-DATABASE_URL = "postgres://eczvjchosxwpcs:96191a4fb8fc12e2fce2ec7315115b4b634614653acbb6f481d6a4a8d2170192@ec2-100-26-39-41.compute-1.amazonaws.com:5432/dfkh38d1dqeie4"
+DATABASE_URL = "<HEROKU-DB-URL>"
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
@@ -39,10 +39,10 @@ for row in details_res:
     message_rows[phone_number].append([customer_message, bot_message])
 
 
-sender_email = "ssamthemessenger@gmail.com"
-to_emails = ["muhammad.huzaifa@tmcltd.com"]
-cc_emails = ["mohammadhuzaifa72@gmail.com"]
-password = "kqtozidepgzdpobb"
+sender_email = "<SENDER-EMAIL>"
+to_emails = ["<TO-EMAILS>"]
+cc_emails = ["<CC-EMAILS>"]
+password = "<YOUR-PASSWORD>"
 
 HTML = """
 <!DOCTYPE html>
