@@ -62,7 +62,7 @@ for row in monthly_res:
 sender_email = "ssamthemessenger@gmail.com"
 to_emails = ["muhammad.huzaifa@tmcltd.com"]
 cc_emails = ["mohammadhuzaifa72@gmail.com"]
-password = "kqtozidepgzdpobb"
+password = ""
 
 HTML = """  
 <!DOCTYPE html>
