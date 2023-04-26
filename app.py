@@ -3,6 +3,18 @@ from tabulate import tabulate
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import psycopg2
+import datetime
+import pytz
+
+
+# Get the current time in the Pacific Time Zone (PST/PDT)
+timezone = pytz.timezone('US/Pacific')
+current_time = datetime.datetime.now(timezone)
+
+# Get the current date and date one day before the current date
+current_date = current_time.strftime('%a, %b %d, %I:%M %p %Z')
+yesterday_date = (current_time - datetime.timedelta(days=1)).strftime('%a, %b %d, %I:%M %p %Z')
+
 
 DATABASE_URL = "postgres://eczvjchosxwpcs:96191a4fb8fc12e2fce2ec7315115b4b634614653acbb6f481d6a4a8d2170192@ec2-100-26-39-41.compute-1.amazonaws.com:5432/dfkh38d1dqeie4"
 
@@ -13,22 +25,30 @@ cur.execute("SELECT * from public.customer_dialogue_tb where date(created_at)=CU
 rows = cur.fetchall()
 cur.close()
 # print(rows)
-print(len(rows))
+# print(len(rows))
 dailyCount = len(rows)
 
+#Weekly
 weekly = conn.cursor()
-weekly.execute("SELECT * FROM public.customer_dialogue_tb WHERE created_at >= date_trunc('week', CURRENT_DATE) AND created_at < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week';")
-response = weekly.fetchall()
+weekly.execute("SELECT user_identifier, user_message, bot_message FROM public.customer_dialogue_tb WHERE created_at >= date_trunc('week', CURRENT_DATE) AND created_at < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week';")
+details_res = weekly.fetchall()
 weekly.close()
-weeklyCount = len(response)
+weeklyCount = len(details_res)
+# print(weeklyCount)
+# print(details_res)
 
-details = conn.cursor()
-details.execute("SELECT user_identifier, user_message, bot_message FROM public.customer_dialogue_tb WHERE created_at >= date_trunc('week', CURRENT_DATE) AND created_at < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week';")
-details_res = details.fetchall()
-details.close()
+#Monthly
+monthly = conn.cursor()
+monthly.execute("SELECT user_identifier, user_message, bot_message FROM public.customer_dialogue_tb WHERE created_at >= date_trunc('month', CURRENT_DATE) AND created_at < date_trunc('month', CURRENT_DATE) + INTERVAL '1 month';")
+monthly_res = monthly.fetchall()
+monthly.close()
+monthlyCount = len(monthly_res)
+# print(monthlyCount)
+# print(monthly_res)
+
 
 message_rows = {}
-for row in details_res:
+for row in monthly_res:
     phone_number = row[0]
     customer_message = row[1]
     bot_message = row[2]
@@ -38,7 +58,7 @@ for row in details_res:
 
     message_rows[phone_number].append([customer_message, bot_message])
 
-
+# print(message_rows)
 sender_email = "ssamthemessenger@gmail.com"
 to_emails = ["muhammad.huzaifa@tmcltd.com"]
 cc_emails = ["mohammadhuzaifa72@gmail.com"]
@@ -77,8 +97,15 @@ HTML = """
 """.format(dailyCount, weeklyCount)
 
 for phone_number, messages in message_rows.items():
+    print('len msg',len(messages))
+    # print(phone_number)
+    print(messages)
+    # print(enumerate(messages))
     HTML += "<tr><td rowspan='{}'>{}</td>".format(len(messages), phone_number)
     for i, (customer_message, bot_message) in enumerate(messages):
+        # print('i',i)
+        print(customer_message)
+        print(bot_message)
         if i > 0:
             HTML += "<tr>"
         HTML += "<td>{}</td>".format(customer_message)
