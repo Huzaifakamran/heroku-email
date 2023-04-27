@@ -64,7 +64,7 @@ for row in daily_res:
 sender_email = "ssamthemessenger@gmail.com"
 to_emails = ["muhammad.huzaifa@tmcltd.com"]
 cc_emails = ["mohammadhuzaifa72@gmail.com"]
-password = "kqtozidepgzdpobb"
+password = ""
 
 HTML = """ 
 <!DOCTYPE html>
@@ -556,7 +556,7 @@ HTML += """
                     </div>
                 </div>
             </div>
-            
+
             <div class="bee-row bee-row-7">
                 <div class="bee-row-content">
                     <div class="bee-col bee-col-1 bee-col-w12">
